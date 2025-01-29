@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capstone</title>
+</head>
+
+
+<body>
+    <h1>AI Hashing Algorithm Detector</h1>
+    <form id="inputForm" onsubmit="handleSubmit(event)">
+        <label for="multiInputBox">Input hashes one per line:</label>
+        <br>
+        <textarea id="multiInputBox" name="multiInputBox" rows="5" cols="30" required></textarea>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>Output</h2>
+    <p id="displayArea">Received input will appear here.</p>
+</body>
+
+</html>
+
+
+<script>
+
+    // On sumbit button clicked, tokenize the inputs, then send off array
+    function handleSubmit(event) {
+        event.preventDefault(); // Prevent default form submission
+        const multiInputBox = document.getElementById('multiInputBox').value;
+
+        // Temporarily display the submitted input directly
+        const displayArea = document.getElementById('displayArea');
+        displayArea.textContent = multiInputBox;
+
+        const inputedHashes = tokenizeInput(multiInputBox);
+        console.log("Input data to send:\n", inputedHashes);
+
+        // 
+    }
+
+    // Split the input by newline characters, ignores empty lines
+    function tokenizeInput(input) {
+        return input.split('\n').filter(line => line.trim() !== '');
+    }
+
+</script>
+<style>
+    textarea {
+        min-height: 200px;
+        min-width: 800px;
+        resize: vertical, horizontal;
+    }
+</style>
