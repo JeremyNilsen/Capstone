@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hash Algorithm Predictor</title>
+</head>
+<body>
+    <h2>Hash Algorithm Predictor</h2>
+    <input type="text" id="hashInput" placeholder="Enter Hash">
+    <button onclick="runPython()">Predict Algorithm</button>
+    <p id="result"></p>
+
+    <script>
+        async function runPython() {
+            const hashValue = document.getElementById('hashInput').value;
+            const modelFile = "rftest.pkl"; // Ensure this matches the correct path
+
+            if (!hashValue) {
+                document.getElementById('result').innerText = "Please enter a hash.";
+                return;
+            }
+
+            try {
+                // Send POST request to the server
+                const response = await fetch("http://localhost:5500/run-python", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ modelFile, hashValue })
+                });
+
+                // Check if the response is okay
+                if (!response.ok) {
+                    throw new Error(`Server Error: ${response.status}`);
+                }
+
+                // Parse the JSON response and display the result
+                const jsonResponse = await response.json();
+                document.getElementById('result').innerText = jsonResponse.result || jsonResponse.error;
+
+            } catch (error) {
+                // If there's an error, display it
+                document.getElementById('result').innerText = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
