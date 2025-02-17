@@ -1,0 +1,39 @@
+import argparse
+import joblib
+import numpy as np
+
+# Feature extraction functions
+def hash_length(h):
+    return len(h)
+
+def hex_ratio(h):
+    return sum(c in "0123456789abcdefABCDEF" for c in h) / len(h)
+
+def digit_ratio(h):
+    return sum(c.isdigit() for c in h) / len(h)
+
+def uppercase_ratio(h):
+    return sum(c.isupper() for c in h) / len(h)
+
+# Predict the algorithm for a new hash
+def predict_algorithm(model_path, hash_value):
+    model, categories = joblib.load(model_path)
+    
+    features = np.array([
+        hash_length(hash_value),
+        hex_ratio(hash_value),
+        digit_ratio(hash_value),
+        uppercase_ratio(hash_value)
+    ]).reshape(1, -1)
+    
+    prediction = model.predict(features)
+    return categories[prediction[0]]
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Predict hashing algorithm using a trained model.")
+    parser.add_argument("model_file", help="Path to the trained model file")
+    parser.add_argument("hash_value", help="Hash to predict the algorithm for")
+    args = parser.parse_args()
+    
+    result = predict_algorithm(args.model_file, args.hash_value)
+    print(f"Predicted algorithm: {result}")
