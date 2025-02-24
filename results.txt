@@ -1,0 +1,31 @@
+-- In testing of random forest checkpoint 1.  First check point.  Features: hash_length, hex_ratio, digit_ratio, uppercase_ratio -- 
+
+--- Accuracy Report ---
+BLAKE2B: 35.52% (3552/10000)
+BLAKE2S: 33.14% (3314/10000)
+MD5: 100.00% (10000/10000)
+SHA1: 100.00% (10000/10000)
+SHA256: 25.19% (2519/10000)
+SHA3_256: 45.27% (4527/10000)
+SHA3_512: 23.27% (2327/10000)
+SHA512: 13.91% (1391/10000)
+WHIRLPOOL: 32.97% (3297/10000)
+
+Overall Accuracy: 45.47% (40927/90000)
+
+
+
+-- Out testing of random forest checkpoint 1.  Same model as above --
+
+--- Accuracy Report ---
+BLAKE2B: 34.48% (3448/10000)
+BLAKE2S: 32.88% (3288/10000)
+MD5: 100.00% (10000/10000)
+SHA1: 100.00% (10000/10000)
+SHA256: 24.12% (2412/10000)
+SHA3_256: 43.73% (4373/10000)
+SHA3_512: 20.89% (2089/10000)
+SHA512: 13.34% (1334/10000)
+WHIRLPOOL: 30.93% (3093/10000)
+
+Overall Accuracy: 44.49% (40037/90000)
