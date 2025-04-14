@@ -8,28 +8,57 @@
         textarea {
             width: 100%;
             height: 150px;
+            resize: none;
+            overflow-y: auto;
         }
-        .result-container {
-            margin-top: 10px;
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .result-table th, .result-table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        .result-table th {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
 <body>
     <h2>Hash Algorithm Predictor</h2>
+
+    <label for="modelSelect">Select Model:</label>
+    <select id="modelSelect">
+        <option value="rftest.pkl">Random Forest</option>
+        <option value="gbtest.pkl">Gradient Boosting</option>
+        <option value="knntest.pkl">KNN</option>
+    </select>
+
     <textarea id="hashInput" placeholder="Enter hashes, one per line"></textarea>
     <button onclick="runPython()">Predict Algorithms</button>
-    <div id="results" class="result-container"></div>
+
+    <table class="result-table" id="results">
+        <thead>
+            <tr>
+                <th>Inputted Hash</th>
+                <th>Predicted Algorithm</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 
     <script>
         async function runPython() {
             const hashValues = document.getElementById('hashInput').value.trim().split('\n');
-            const modelFile = "rftest.pkl";
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = ""; // Clear previous results
+            const modelFile = document.getElementById('modelSelect').value;
+            const resultsTableBody = document.getElementById('results').getElementsByTagName('tbody')[0];
+            resultsTableBody.innerHTML = "";
 
             for (const hashValue of hashValues) {
-                if (!hashValue.trim()) continue; // Skip empty lines
-                
+                if (!hashValue.trim()) continue;
+
                 try {
                     const response = await fetch("http://localhost:5500/run-python", {
                         method: "POST",
@@ -39,14 +68,28 @@
 
                     const jsonResponse = await response.json();
                     const resultText = jsonResponse.result || jsonResponse.error;
-                    
-                    const p = document.createElement("p");
-                    p.innerText = `${hashValue} → ${resultText}`;
-                    resultsDiv.appendChild(p);
+
+                    const row = document.createElement("tr");
+                    const hashCell = document.createElement("td");
+                    const resultCell = document.createElement("td");
+
+                    hashCell.textContent = hashValue;
+                    resultCell.textContent = resultText;
+
+                    row.appendChild(hashCell);
+                    row.appendChild(resultCell);
+                    resultsTableBody.appendChild(row);
                 } catch (error) {
-                    const p = document.createElement("p");
-                    p.innerText = `${hashValue} → Error: ${error.message}`;
-                    resultsDiv.appendChild(p);
+                    const row = document.createElement("tr");
+                    const hashCell = document.createElement("td");
+                    const resultCell = document.createElement("td");
+
+                    hashCell.textContent = hashValue;
+                    resultCell.textContent = `Error: ${error.message}`;
+
+                    row.appendChild(hashCell);
+                    row.appendChild(resultCell);
+                    resultsTableBody.appendChild(row);
                 }
             }
         }

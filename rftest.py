@@ -59,4 +59,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     result = predict_algorithm(args.model_file, args.hash_value)
-    print(f"Predicted algorithm: {result}")
+    print(f"{result}")

@@ -9,11 +9,12 @@ def run_python_script():
     model_file = data.get('modelFile')
     hash_value = data.get('hashValue')
 
-    if not hash_value:
-        return jsonify({'error': 'Missing hashValue'}), 400
+    # Basic validation
+    if not hash_value or not model_file:
+        return jsonify({'error': 'Missing hashValue or modelFile'}), 400
 
     try:
-        # Run Python script
+        # Always run rftest.py, with selected model file
         process = subprocess.Popen(
             ['python', 'rftest.py', model_file, hash_value],
             stdout=subprocess.PIPE,
